@@ -1,0 +1,161 @@
+
+SQL> --Collection method COUNT() returns the number of elements in an initialize collection.--
+SQL> --If used with an initialize collection with no elements it returns zero.--
+SQL> --In case of nested table colection method COUNT() only returns the number of non empty elements.--
+SQL> --as it is possible for a nested table to have individual elements that are empty.--
+SQL> 
+SQL> set serveroutput on
+SQL> declare
+  2  type my_nested_table is table of number;
+  3  var_nt my_nested_table := my_nested_table(9,18.27,36,45,54,63,72,81,90);
+  4  begin
+  5  dbms_output.put_line('The size of the nested table is '||var_nt.COUNT);
+  6  end;
+  7  /
+The size of the nested table is 9
+
+PL/SQL procedure successfully completed.
+
+SQL> 
+SQL> declare
+  2  type my_nested_table is table of number;
+  3  var_nt my_nested_table := my_nested_table(9,18.27,36,45,54,63,72,81,90);
+  4  begin
+  5  if var_nt.COUNT>=9 then
+  6  dbms_output.put_line('You have alresdy insserted 9 elements ');
+  7  dbms_output.put_line('Are you sure you wantto insert more?');
+  8  end if;
+  9  end;
+ 10  /
+You have alresdy insserted 9 elements
+Are you sure you wantto insert more?
+
+PL/SQL procedure successfully completed.
+
+SQL> 
+SQL> declare   
+  2  type my_nested_table is table of number;
+  3  var_nt my_nested_table := my_nested_table(9,18.27,36,45,54,63,72,81,90);
+  4  begin
+  5  for i in 1..var_nt.COUNT
+  6  loop
+  7  dbms_output.put_line('Value stored at index '||i||' is '||var_nt(i));
+  8  end loop;
+  9  end;
+ 10  /
+Value stored at index 1 is 9
+Value stored at index 2 is 18.27
+Value stored at index 3 is 36
+Value stored at index 4 is 45
+Value stored at index 5 is 54
+Value stored at index 6 is 63
+Value stored at index 7 is 72
+Value stored at index 8 is 81
+Value stored at index 9 is 90
+
+PL/SQL procedure successfully completed.
+
+
+SQL> --EXISTS()--
+SQL> --Collection method EXISTS() checks the existance of an element at a specified index in a collection.--
+SQL> --If it finds specified elements then it returns TRUE otherwise it returns FALSE.--
+SQL> 
+
+SQL> ed
+Wrote file afiedt.buf
+
+  1  declare
+  2  type my_nested_table is table of varchar2(20);
+  3  col_var_1 my_nested_table := my_nested_table('superman','ironman','batman');
+  4  begin
+  5  if col_var_1.EXISTS (1)  then
+  6  dbms_output.put_line('hey we found '||col_var_1(1));
+  7  else
+  8  dbms_output.put_line('sorry! no data found at this index');
+  9  end if;
+ 10* end;
+SQL> /
+hey we found superman
+
+PL/SQL procedure successfully completed.
+
+SQL> 
+SQL> ed
+Wrote file afiedt.buf
+
+  1  declare
+  2  type my_nested_table is table of varchar2(20);
+  3  col_var_1 my_nested_table := my_nested_table('superman','ironman','batman');
+  4  begin
+  5  if col_var_1.EXISTS (4)  then
+  6  dbms_output.put_line('hey we found '||col_var_1(4));
+  7  else
+  8  dbms_output.put_line('this index is empty. inserting new data...');
+  9  col_var_1.EXTEND;
+ 10  col_var_1(4) := 'spiderman';
+ 11  end if;
+ 12  dbms_output.put_line(' new data at index 4 is '||col_var_1(4));
+ 13* end;
+SQL> /
+this index is empty. inserting new data...
+new data at index 4 is spiderman
+
+PL/SQL procedure successfully completed.
+
+SQL> 
+SQL> 
+
+SQL> --FIRST() & LAST() --
+SQL> --We use collection functions FIRST and LAST to know the first and last index values defined in a collection--
+SQL> --You can use both these functions with all three types of collections.--
+SQL> --Both the functions returns null when applied to an empty collection.--
+SQL> --when applied to an initialized collection that has no elements.--
+SQL> --They raise COLLECTION_IS _NULL exception when applied to an uninitialized collection.--
+SQL> 
+SQL> declare
+  2  type nt is table of number;
+  3  var nt := nt(10,20,30,40,50);
+  4  begin
+  5  dbms_output.put_line('First index of the nested table is '||var.FIRST);
+  6  dbms_output.put_line('Last index of the nested table is '||var.LAST);
+  7  end;
+  8  /
+First index of the nested table is 1
+Last index of the nested table is 5
+
+PL/SQL procedure successfully completed.
+
+SQL> 
+SQL> ed
+Wrote file afiedt.buf
+
+  1  declare
+  2  type nt is table of number;
+  3  var nt := nt(10,20,30,40,50);
+  4  begin
+  5  var.delete(1);
+  6  dbms_output.put_line('First index of the nested table is '||var.FIRST);
+  7* end;
+SQL> /
+First index of the nested table is 2
+
+PL/SQL procedure successfully completed.
+
+SQL> 
+SQL> ed
+Wrote file afiedt.buf
+
+  1  declare
+  2  type nt is table of number;
+  3  var nt := nt(10,20,30,40,50);
+  4  begin
+  5  var.TRIM;
+  6  dbms_output.put_line('Last index of nested table is '||var.LAST);
+  7* end;
+SQL> /
+Last index of nested table is 4
+
+PL/SQL procedure successfully completed.
+
+SQL> 
+
